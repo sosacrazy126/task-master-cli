@@ -36,15 +36,26 @@ const LOG_LEVELS = {
 function log(level, ...args) {
   const icons = {
     debug: chalk.gray('🔍'),
-    info: chalk.blue('ℹ️'),
+    info: chalk.blue('ℹ️'), 
     warn: chalk.yellow('⚠️'),
     error: chalk.red('❌'),
     success: chalk.green('✅')
   };
+
+  const timestamp = new Date().toISOString();
+  const logLevel = LOG_LEVELS[level] || LOG_LEVELS.info;
   
-  if (LOG_LEVELS[level] >= LOG_LEVELS[CONFIG.logLevel]) {
+  if (logLevel >= LOG_LEVELS[CONFIG.logLevel]) {
     const icon = icons[level] || '';
-    console.log(`${icon} ${args.join(' ')}`);
+    const message = args.join(' ');
+    
+    // Debug logs get full timestamp and stack trace
+    if (level === 'debug' && CONFIG.debug) {
+      const stack = new Error().stack.split('\n')[2].trim();
+      console.log(`${timestamp} ${icon} [${level.toUpperCase()}] ${message}\n  ${stack}`);
+    } else {
+      console.log(`${timestamp} ${icon} [${level.toUpperCase()}] ${message}`);
+    }
   }
 }
 

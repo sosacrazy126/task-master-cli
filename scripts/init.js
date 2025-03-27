@@ -128,9 +128,16 @@ function log(level, ...args) {
 // Function to create directory if it doesn't exist
 function ensureDirectoryExists(dirPath) {
   if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
-    log('info', `Created directory: ${dirPath}`);
+    try {
+      fs.mkdirSync(dirPath, { recursive: true });
+      log('info', `Created directory: ${dirPath}`);
+      return true;
+    } catch (error) {
+      log('error', `Failed to create directory ${dirPath}: ${error.message}`);
+      throw error;
+    }
   }
+  return false;
 }
 
 // Function to copy a file from the package to the target directory
