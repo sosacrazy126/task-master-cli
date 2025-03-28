@@ -10,6 +10,7 @@ A comprehensive task management CLI for developers to manage project tasks, depe
 - Subtask management for breaking down complex tasks
 - Notification system with pluggable architecture
 - Project dashboards with progress metrics
+- Multiple AI provider support (Claude or Cursor AI)
 
 ## Getting Started
 
@@ -41,6 +42,27 @@ Tasks in Task Master include:
 - Implementation details
 - Test strategy
 - Subtasks
+
+## AI Provider Configuration
+
+Task Master supports multiple AI providers:
+
+### Claude AI (Default)
+```
+# .env configuration
+ANTHROPIC_API_KEY=your_anthropic_api_key
+MODEL=claude-3-7-sonnet-20250219
+AI_PROVIDER=claude
+```
+
+### Cursor AI
+```
+# .env configuration
+CURSOR_API_KEY=your_cursor_api_key
+CURSOR_API_ENDPOINT=https://api.cursor.sh/v1/generate
+CURSOR_MODEL=cursor-3
+AI_PROVIDER=cursor
+```
 
 ## Project Status
 

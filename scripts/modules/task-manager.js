@@ -34,6 +34,7 @@ import {
 } from './ui.js';
 
 import {
+  callAIProvider,
   callClaude,
   generateSubtasks,
   generateSubtasksWithPerplexity,
@@ -83,8 +84,8 @@ async function parsePRD(prdPath, tasksPath, numTasks) {
     // Read the PRD content
     const prdContent = fs.readFileSync(prdPath, 'utf8');
     
-    // Call Claude to generate tasks
-    const tasksData = await callClaude(prdContent, prdPath, numTasks);
+    // Call AI provider to generate tasks
+    const tasksData = await callAIProvider(prdContent, prdPath, numTasks);
     
     // Create the directory if it doesn't exist
     const tasksDir = path.dirname(tasksPath);

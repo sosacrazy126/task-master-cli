@@ -6,7 +6,8 @@
   "type": "module",
   "bin": {
     "task-master": "bin/task-master.js",
-    "task-master-init": "bin/task-master-init.js"
+    "task-master-init": "bin/task-master-init.js",
+    "cursor-task-master": "bin/cursor-task-master.js"
   },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/.bin/jest",
@@ -14,7 +15,7 @@
     "test:coverage": "node --experimental-vm-modules node_modules/.bin/jest --coverage",
     "prepare-package": "node scripts/prepare-package.js",
     "prepublishOnly": "npm run prepare-package",
-    "prepare": "chmod +x bin/task-master.js bin/task-master-init.js"
+    "prepare": "chmod +x bin/task-master.js bin/task-master-init.js bin/cursor-task-master.js"
   },
   "keywords": [
     "claude",
@@ -30,6 +31,7 @@
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
+    "axios": "^1.6.5",
     "boxen": "^8.0.1",
     "chalk": "^4.1.2",
     "cli-table3": "^0.6.5",
