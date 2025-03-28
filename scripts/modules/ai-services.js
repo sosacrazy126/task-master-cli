@@ -256,7 +256,7 @@ async function callCursor(prdContent, prdPath, numTasks, retryCount = 0, useClau
     
     log('debug', `Using model: ${model}`);
     
-    // Make request to Cursor API
+    // Make request to Cursor API with proper SSL handling
     const response = await axios.post(cursorEndpoint, {
       model: model,
       system: systemPrompt,
@@ -272,7 +272,11 @@ async function callCursor(prdContent, prdPath, numTasks, retryCount = 0, useClau
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.CURSOR_API_KEY || CONFIG.cursorApiKey}`
-      }
+      },
+      // Add SSL configuration to handle possible certificate issues
+      httpsAgent: new (await import('https')).Agent({
+        rejectUnauthorized: process.env.NODE_TLS_REJECT_UNAUTHORIZED !== '0'
+      })
     });
     
     stopLoadingIndicator(loadingIndicator);
@@ -281,7 +285,24 @@ async function callCursor(prdContent, prdPath, numTasks, retryCount = 0, useClau
     
     return processCursorResponse(response.data);
   } catch (error) {
-    log('error', `Cursor API error: ${error.message}`);
+    stopLoadingIndicator();
+    
+    // Provide more detailed error information for debugging
+    if (error.response) {
+      // Server responded with an error status code
+      log('error', `Cursor API error (${error.response.status}): ${error.response.data?.error || error.message}`);
+    } else if (error.request) {
+      // Request was made but no response received (network error)
+      log('error', `Cursor API network error: ${error.message}`);
+      
+      // Check for SSL errors specifically
+      if (error.message.includes('certificate') || error.message.includes('self-signed')) {
+        log('warn', 'SSL certificate issue detected. Consider setting NODE_TLS_REJECT_UNAUTHORIZED=0 for testing purposes only.');
+      }
+    } else {
+      // Error in setting up the request
+      log('error', `Cursor API setup error: ${error.message}`);
+    }
     
     if (retryCount < 2) {
       log('info', `Retrying (${retryCount + 1}/2)...`);
