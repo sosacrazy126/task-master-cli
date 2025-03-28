@@ -1,0 +1,256 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Enhance Task Data Model",
+      "description": "Expand the task data model to support new features including user assignments, comments, and extended metadata",
+      "status": "done",
+      "dependencies": [],
+      "priority": "high",
+      "details": "Update the JSON schema for tasks to include new fields such as assignee, comments array, version history, and extended metadata. Ensure backward compatibility with existing task files.",
+      "testStrategy": "Create unit tests validating the new schema and testing migration of existing task files.",
+      "subtasks": [
+        {
+          "id": "1-1",
+          "title": "Design Extended JSON Schema",
+          "description": "Create comprehensive schema design for new task attributes",
+          "status": "done",
+          "priority": "high",
+          "details": "Design JSON schema that includes user assignments, comments, history tracking, and metadata fields. Document schema with JSDoc comments."
+        },
+        {
+          "id": "1-2",
+          "title": "Implement Schema Validation",
+          "description": "Add validation functions for the enhanced schema",
+          "status": "done",
+          "priority": "high",
+          "details": "Create validation functions to ensure task data conforms to the new schema while maintaining backward compatibility. Implement joi schema validation with customized error messages and proper type checking for all new fields. Include support for deep validation of nested objects."
+        },
+        {
+          "id": "1-3",
+          "title": "Create Migration Utilities",
+          "description": "Build utilities to migrate existing task data",
+          "status": "done",
+          "priority": "medium",
+          "details": "Implement functions to automatically upgrade existing task data to the new schema format without data loss."
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Improve Dependency Visualization",
+      "description": "Create better visualization for task dependencies",
+      "status": "pending",
+      "dependencies": [
+        1
+      ],
+      "priority": "medium",
+      "details": "Implement a graph-based visualization of task dependencies using a library like D3.js. Show dependency chains, identify critical paths, and highlight circular dependencies.",
+      "testStrategy": "Test with various dependency structures including complex dependency chains and edge cases."
+    },
+    {
+      "id": 3,
+      "title": "Enhance Complexity Analysis",
+      "description": "Improve task complexity scoring with more granular metrics",
+      "status": "pending",
+      "dependencies": [
+        1
+      ],
+      "priority": "medium",
+      "details": "Extend complexity analysis to consider more factors including estimated time, technical complexity, dependency count, and risk factors. Implement a weighted scoring system.",
+      "testStrategy": "Compare new complexity scores against expert estimates for a sample project to validate accuracy."
+    },
+    {
+      "id": 4,
+      "title": "Implement Task Templates",
+      "description": "Add support for task templates for common development patterns",
+      "status": "pending",
+      "dependencies": [
+        1
+      ],
+      "priority": "low",
+      "details": "Create a template system allowing users to save and load predefined task structures for common project types. Include templates for web development, API development, and mobile app projects.",
+      "testStrategy": "Verify template loading, customization, and application to projects."
+    },
+    {
+      "id": 5,
+      "title": "Add Multi-User Support",
+      "description": "Implement authentication and user management",
+      "status": "pending",
+      "dependencies": [
+        1
+      ],
+      "priority": "high",
+      "details": "Create user authentication system supporting local or server-based authentication. Store credentials securely and implement login/logout functionality.",
+      "testStrategy": "Test user creation, authentication, password security, and session management."
+    },
+    {
+      "id": 6,
+      "title": "Develop Task Assignment System",
+      "description": "Allow tasks to be assigned to specific users",
+      "status": "pending",
+      "dependencies": [
+        5
+      ],
+      "priority": "medium",
+      "details": "Extend the task model to include assignee information. Add commands for assigning and reassigning tasks to users.",
+      "testStrategy": "Test assignment functionality including validation, notifications, and conflict resolution."
+    },
+    {
+      "id": 7,
+      "title": "Create Task Commenting System",
+      "description": "Allow users to add comments to tasks",
+      "status": "pending",
+      "dependencies": [
+        5
+      ],
+      "priority": "medium",
+      "details": "Implement a commenting system for tasks including comment creation, editing, and deletion. Store comments with author, timestamp, and content.",
+      "testStrategy": "Test comment CRUD operations and verify proper attribution and timestamps."
+    },
+    {
+      "id": 8,
+      "title": "Build Notification System",
+      "description": "Implement notifications for task status changes",
+      "status": "pending",
+      "dependencies": [
+        5,
+        6,
+        7
+      ],
+      "priority": "low",
+      "details": "Create a notification system to alert users of task changes including assignments, status updates, and comments. Support multiple notification channels (console, email, webhook) with a pluggable architecture that allows for easy addition of new notification providers. Implement rate limiting and batching for notifications to prevent notification fatigue.",
+      "testStrategy": "Test notification generation, delivery, and customization options across different channels. Validate rate limiting and batching functionality.",
+      "subtasks": [
+        {
+          "id": "8-1",
+          "title": "Design Notification Events System",
+          "description": "Create event system for triggering notifications",
+          "status": "pending",
+          "priority": "high",
+          "details": "Implement an event-driven architecture for notifications with support for custom event types and filtering."
+        },
+        {
+          "id": "8-2",
+          "title": "Implement Channel Providers",
+          "description": "Build providers for different notification channels",
+          "status": "pending",
+          "priority": "medium",
+          "details": "Create pluggable notification providers for console, email and webhook notifications with a common interface."
+        },
+        {
+          "id": "8-3",
+          "title": "Add User Notification Preferences",
+          "description": "Allow users to customize notification settings",
+          "status": "pending",
+          "priority": "low",
+          "details": "Add user preferences for notification types, channels, and frequency with per-project customization options."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Develop Dependency Graph Module",
+      "description": "Build a comprehensive dependency graph visualization module",
+      "status": "pending",
+      "dependencies": [
+        2
+      ],
+      "priority": "high",
+      "details": "Extend the basic dependency visualization with interactive features, filtering options, and export capabilities. Support different visualization formats.",
+      "testStrategy": "Test graph generation, interaction, and export functionality with various data sets."
+    },
+    {
+      "id": 10,
+      "title": "Create Progress Dashboard",
+      "description": "Implement a metrics dashboard for project progress",
+      "status": "pending",
+      "dependencies": [
+        1,
+        3
+      ],
+      "priority": "medium",
+      "details": "Build a dashboard showing key project metrics including completion rate, task distribution by status/priority, and estimated vs. actual time spent.",
+      "testStrategy": "Verify metric calculations and dashboard rendering with different project states."
+    },
+    {
+      "id": 11,
+      "title": "Build Report Generation System",
+      "description": "Create a system for generating formatted reports",
+      "status": "pending",
+      "dependencies": [
+        9,
+        10
+      ],
+      "priority": "medium",
+      "details": "Implement a report generation system supporting multiple output formats (PDF, HTML, Markdown). Include templates for different report types.",
+      "testStrategy": "Test report generation, formatting, and accuracy across output formats."
+    },
+    {
+      "id": 12,
+      "title": "Implement Customizable Views",
+      "description": "Add support for custom report views and filters",
+      "status": "pending",
+      "dependencies": [
+        11
+      ],
+      "priority": "low",
+      "details": "Allow users to create and save custom report configurations with specific metrics, filters, and visualizations.",
+      "testStrategy": "Test view creation, persistence, and application to different projects."
+    },
+    {
+      "id": 13,
+      "title": "Create Integration Framework",
+      "description": "Develop a framework for external service integrations",
+      "status": "pending",
+      "dependencies": [
+        1
+      ],
+      "priority": "high",
+      "details": "Build an abstraction layer for integrating with external services. Include authentication, request handling, and error management.",
+      "testStrategy": "Test with mock external services, verifying connection handling and error recovery."
+    },
+    {
+      "id": 14,
+      "title": "Implement Jira Integration",
+      "description": "Create connector for Jira synchronization",
+      "status": "pending",
+      "dependencies": [
+        13
+      ],
+      "priority": "medium",
+      "details": "Implement bidirectional synchronization between Task Master and Jira including tasks, assignments, and status updates.",
+      "testStrategy": "Test synchronization accuracy, conflict resolution, and error handling with a Jira instance."
+    },
+    {
+      "id": 15,
+      "title": "Add GitHub Issues Integration",
+      "description": "Build connector for GitHub Issues",
+      "status": "pending",
+      "dependencies": [
+        13
+      ],
+      "priority": "medium",
+      "details": "Create bidirectional synchronization with GitHub Issues including automatic PR linking and status tracking.",
+      "testStrategy": "Test with GitHub repositories, verifying task-issue mapping and updates."
+    },
+    {
+      "id": 16,
+      "title": "Implement CI/CD Integration",
+      "description": "Add support for CI/CD pipeline integration",
+      "status": "pending",
+      "dependencies": [
+        13
+      ],
+      "priority": "low",
+      "details": "Create hooks for common CI/CD systems to update task status based on build/deployment results.",
+      "testStrategy": "Test integration with common CI platforms (GitHub Actions, Jenkins) and verify status updates."
+    }
+  ],
+  "metadata": {
+    "projectName": "Task Master CLI Enhancement",
+    "totalTasks": 16,
+    "sourceFile": "scripts/PRD.txt",
+    "generatedAt": "2023-03-28"
+  }
+}
