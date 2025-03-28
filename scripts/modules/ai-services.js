@@ -20,7 +20,8 @@ const PROVIDERS = {
   PERPLEXITY: 'perplexity',
   CODY: 'cody',
   CONTINUE: 'continue',
-  CURSOR: 'cursor'
+  CURSOR: 'cursor',
+  CURSOR_CLAUDE: 'cursor-claude'
 };
 
 // Default configuration
@@ -60,10 +61,6 @@ function getProviderClient(provider) {
         });
       }
       return clients[provider];
-      
-    case PROVIDERS.CURSOR:
-      // Cursor uses a REST API approach instead of a client
-      return process.env.CURSOR_API_KEY ? true : null;
       
     case PROVIDERS.CODY:
     case PROVIDERS.CONTINUE:
@@ -159,11 +156,17 @@ Important: Your response must be valid JSON only, with no additional explanation
  * @returns {Object} Provider's response
  */
 async function callAIProvider(prdContent, prdPath, numTasks, retryCount = 0) {
-  const provider = process.env.AI_PROVIDER || 'claude';
+  const provider = process.env.AI_PROVIDER || CONFIG.aiProvider || 'cursor-claude';
+  
+  log('info', `Using AI provider: ${provider}`);
   
   switch(provider.toLowerCase()) {
     case 'cursor':
       return callCursor(prdContent, prdPath, numTasks, retryCount);
+    case 'cursor-claude':
+      log('info', 'Using Cursor API with Claude model selection');
+      // Use Cursor API but specify Claude model
+      return callCursor(prdContent, prdPath, numTasks, retryCount, true);
     case 'claude':
     default:
       return callClaude(prdContent, prdPath, numTasks, retryCount);
@@ -228,9 +231,10 @@ async function callClaude(prdContent, prdPath, numTasks, retryCount = 0) {
  * @param {string} prdPath - Path to the PRD file
  * @param {number} numTasks - Number of tasks to generate
  * @param {number} retryCount - Current retry count
+ * @param {boolean} useClaudeModel - Whether to use Claude model via Cursor
  * @returns {Object} Cursor's response
  */
-async function callCursor(prdContent, prdPath, numTasks, retryCount = 0) {
+async function callCursor(prdContent, prdPath, numTasks, retryCount = 0, useClaudeModel = false) {
   try {
     const systemPrompt = PROMPT_TEMPLATES.TASK_GENERATION
       .replace(/\${numTasks}/g, numTasks)
@@ -238,14 +242,23 @@ async function callCursor(prdContent, prdPath, numTasks, retryCount = 0) {
 
     log('debug', `Calling Cursor AI with system prompt: ${systemPrompt}`);
     
-    const loadingIndicator = startLoadingIndicator('Analyzing with Cursor AI...');
+    const loadingIndicator = startLoadingIndicator(useClaudeModel ? 
+      'Analyzing with Cursor (Claude model)...' : 
+      'Analyzing with Cursor AI...');
     
-    // Cursor API endpoint (replace with actual endpoint when available)
-    const cursorEndpoint = process.env.CURSOR_API_ENDPOINT || 'https://api.cursor.sh/v1/generate';
+    // Cursor API endpoint
+    const cursorEndpoint = process.env.CURSOR_API_ENDPOINT || CONFIG.cursorApiEndpoint;
+    
+    // Determine which model to use
+    const model = useClaudeModel ? 
+      (process.env.MODEL || CONFIG.model) : 
+      (process.env.CURSOR_MODEL || CONFIG.cursorModel);
+    
+    log('debug', `Using model: ${model}`);
     
     // Make request to Cursor API
     const response = await axios.post(cursorEndpoint, {
-      model: process.env.CURSOR_MODEL || 'cursor-3',
+      model: model,
       system: systemPrompt,
       messages: [
         {
@@ -258,7 +271,7 @@ async function callCursor(prdContent, prdPath, numTasks, retryCount = 0) {
     }, {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.CURSOR_API_KEY}`
+        'Authorization': `Bearer ${process.env.CURSOR_API_KEY || CONFIG.cursorApiKey}`
       }
     });
     
@@ -272,7 +285,7 @@ async function callCursor(prdContent, prdPath, numTasks, retryCount = 0) {
     
     if (retryCount < 2) {
       log('info', `Retrying (${retryCount + 1}/2)...`);
-      return callCursor(prdContent, prdPath, numTasks, retryCount + 1);
+      return callCursor(prdContent, prdPath, numTasks, retryCount + 1, useClaudeModel);
     }
     
     throw new Error(`Failed to analyze PRD with Cursor: ${handleCursorError(error)}`);

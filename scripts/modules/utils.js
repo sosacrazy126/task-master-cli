@@ -18,8 +18,8 @@ const CONFIG = {
   defaultPriority: process.env.DEFAULT_PRIORITY || "medium",
   projectName: process.env.PROJECT_NAME || "Task Master",
   projectVersion: "1.5.0", // Hardcoded version - ALWAYS use this value, ignore environment variable
-  aiProvider: process.env.AI_PROVIDER || "claude", // AI provider to use: 'claude' or 'cursor'
-  useCursor: process.env.AI_PROVIDER === "cursor", // Convenient boolean flag for conditionals
+  aiProvider: process.env.AI_PROVIDER || "cursor-claude", // AI provider to use: 'claude', 'cursor', or 'cursor-claude'
+  useCursor: process.env.AI_PROVIDER?.startsWith("cursor") || true, // Convenient boolean flag for conditionals
   cursorApiKey: process.env.CURSOR_API_KEY || "", // Cursor API key
   cursorApiEndpoint: process.env.CURSOR_API_ENDPOINT || "https://api.cursor.sh/v1/generate", // Cursor API endpoint
   cursorModel: process.env.CURSOR_MODEL || "cursor-3", // Cursor model to use
